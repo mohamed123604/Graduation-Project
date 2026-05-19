@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IntellWall Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Michroma', sans-serif; }
+
+        #sidebar {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        #sidebar.closed {
+            transform: translateX(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #overlay {
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        #overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #181B2C; }
+        ::-webkit-scrollbar-thumb { background: #3C69D4; border-radius: 2px; }
+
+        .nav-link {
+            display: block;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #9CA3AF;
+            transition: background 0.2s, color 0.2s;
+            margin-top: 6px;
+            letter-spacing: 0.04em;
+        }
+        .nav-link:hover { background: rgba(60,105,212,0.25); color: #fff; }
+        .nav-link.active { background: #3C69D4; color: #fff; }
+
+        .stat-card {
+            transition: border-color 0.2s, box-shadow 0.2s;
+            border: 1px solid transparent;
+        }
+        .stat-card:hover {
+            border-color: rgba(60,105,212,0.4);
+            box-shadow: 0 0 16px rgba(60,105,212,0.1);
+        }
+
+        .chart-placeholder {
+            width: 100%; height: 100%; min-height: 80px;
+            display: flex; align-items: center; justify-content: center;
+            color: #374151; font-size: 10px; letter-spacing: 0.08em;
+            border: 1px dashed #2D3347; border-radius: 8px;
+        }
+
+        @media (min-width: 1024px) {
+            #sidebar {
+                position: fixed !important;
+                top: 0; left: 0;
+                height: 100vh;
+                transform: none !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+            }
+            #overlay { display: none !important; }
+            .main-content { margin-left: 220px; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.4s ease both; }
+        .d1{animation-delay:.05s} .d2{animation-delay:.10s} .d3{animation-delay:.15s}
+        .d4{animation-delay:.20s} .d5{animation-delay:.25s} .d6{animation-delay:.30s}
+    </style>
+</head>
+
+<body class="w-full min-h-screen bg-[#181B2C] text-slate-200">
+
+    <div id="overlay" class="fixed inset-0 bg-black/60 z-30 lg:hidden" onclick="toggleSidebar()"></div>
+
+    <aside id="sidebar" class="closed fixed top-0 left-0 z-40 w-[260px] lg:w-[220px] h-full bg-[#181B2C] border-r border-white/5 flex flex-col overflow-y-auto">
+        <div class="flex items-center justify-between px-5 py-5 lg:py-6 border-b border-white/5 flex-shrink-0">
+            <img src="images/intellwall_4.png" alt="IntellWall" class="w-28 xl:w-32 object-contain">
+            <button class="lg:hidden text-gray-400 hover:text-white transition-colors p-1" onclick="toggleSidebar()">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+        <nav class="flex-1 px-3 py-4">
+            <p class="text-[9px] text-gray-600 uppercase tracking-widest px-3 mb-3">Main Menu</p>
+            <a href="Dashboard.html" class="nav-link"><i class="fa-solid fa-gauge-high mr-2.5 opacity-70"></i>Dashboard</a>
+            <a href="Traffic.html" class="nav-link "><i class="fa-solid fa-chart-line mr-2.5 opacity-70"></i>Traffic</a>
+            <a href="threats.html" class="nav-link active"><i class="fa-solid fa-triangle-exclamation mr-2.5 opacity-70"></i>Threats</a>
+            <a href="firewall.html" class="nav-link"><i class="fa-solid fa-shield-halved mr-2.5 opacity-70"></i>Firewall</a>
+            <a href="anomaly.html" class="nav-link"><i class="fa-solid fa-wave-square mr-2.5 opacity-70"></i>Anomaly</a>
+            <a href="sources.html" class="nav-link"><i class="fa-solid fa-database mr-2.5 opacity-70"></i>Sources</a>
+            <a href="RL_Agent.html" class="nav-link"><i class="fa-solid fa-robot mr-2.5 opacity-70"></i>RL Agent</a>
+            <a href="Alerts.html" class="nav-link"><i class="fa-solid fa-bell mr-2.5 opacity-70"></i>Alerts</a>
+        </nav>
+        <div class="px-4 py-4 border-t border-white/5 hidden lg:flex items-center gap-3 flex-shrink-0">
+            <div class="w-8 h-8 rounded-full bg-[#3C69D4]/30 border border-[#3C69D4]/40 flex items-center justify-center flex-shrink-0">
+                <span class="text-[9px] text-white">KW</span>
+            </div>
+            <div class="min-w-0">
+                <p class="text-white text-[10px] truncate">Kareem Walid</p>
+                <p class="text-gray-500 text-[9px] truncate">Network Admin</p>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-content flex flex-col min-h-screen">
+
+        <header class="sticky top-0 z-20 bg-[#181B2C] border-b border-white/5 flex-shrink-0 px-3 sm:px-5 lg:px-6 h-14 sm:h-16 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                <button class="lg:hidden text-gray-400 hover:text-white transition-colors p-1.5 flex-shrink-0" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+                <div class="relative w-full max-w-xs sm:max-w-sm">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-[10px]"></i>
+                    <input type="search" placeholder="Search threats, IPs, events…"
+                        class="w-full pl-8 pr-4 py-2 bg-[#1F2336] rounded-full text-xs text-white placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-[#3C69D4]/50 border border-transparent focus:border-[#3C69D4]/30">
+                </div>
+            </div>
+            <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                <button class="relative text-gray-400 hover:text-white transition-colors p-1.5">
+                    <i class="fa-regular fa-bell text-sm sm:text-base"></i>
+                    <span class="absolute top-0.5 right-0.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#181B2C]"></span>
+                </button>
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#3C69D4]/30 border border-[#3C69D4]/40 flex items-center justify-center flex-shrink-0">
+                        <span class="text-[9px] sm:text-[10px] text-white">KW</span>
+                    </div>
+                    <div class="hidden md:block">
+                        <p class="text-white text-xs leading-tight">Kareem Walid</p>
+                        <p class="text-gray-500 text-[10px]">Network Admin</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+          <main class="flex-1 p-3 sm:p-4 md:p-5 lg:p-6 overflow-y-auto">
+
+            <div class="mb-4 sm:mb-5">
+                <h1 class="text-white text-sm sm:text-base font-semibold tracking-wide">Traffic Analysis</h1>
+                <p class="text-gray-500 text-[10px] sm:text-xs mt-0.5">Monitor captured packets and network flow in real-time</p>
+            </div>
+
+            <div class="stat-card bg-[#1F2336] rounded-xl p-3 sm:p-4 mb-3 fade-in d1">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <div class="w-1 h-5 bg-blue-500 rounded-full flex-shrink-0"></div>
+                    <h1 class="text-xs sm:text-sm font-medium text-white">Packet Capture</h1>
+                </div>
+            </div>
+
+            <div class="stat-card bg-[#1F2336] rounded-xl p-3 sm:p-4 mb-3 fade-in d2">
+                <div class="relative w-full">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-[10px]"></i>
+                    <input
+                        id="packet-search"
+                        type="text"
+                        placeholder="Search by IP, Protocol, or Threat..."
+                        class="w-full pl-8 pr-4 py-2 bg-[#181B2C] rounded-full text-[10px] sm:text-xs text-white placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-[#3C69D4]/50 border border-transparent focus:border-[#3C69D4]/30"
+                    >
+                </div>
+            </div>
+
+            <div class="stat-card bg-[#1F2336] rounded-xl p-3 sm:p-4 mb-3 fade-in d3 overflow-hidden">
+                <div class="bg-[#181B2C] rounded-lg overflow-hidden border border-white/5">
+                    <div class="grid grid-cols-6 text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs text-gray-500 bg-[#1F2336] font-semibold px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 border-b border-white/5 min-w-[550px]">
+                        <span>Time</span>
+                        <span>Source IP</span>
+                        <span>Destination IP</span>
+                        <span>Protocol</span>
+                        <span>Packet Size</span>
+                    </div>
+                    <div class="overflow-x-auto sm:overflow-x-visible max-h-[300px] sm:max-h-[400px] overflow-y-auto">
+                        <div id="packet-container" class="space-y-0 min-w-[550px] sm:min-w-0"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+
+    <div class="col-span-1 md:col-span-2 lg:col-span-4 lg:row-span-3 stat-card bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col fade-in d4 min-h-[180px] lg:min-h-0" style="min-height: 220px;">
+        <div class="flex gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <div class="w-1.5 h-5 bg-blue-500 rounded-full flex-shrink-0"></div>
+            <div class="w-full">
+                <h1 class="text-[10px] sm:text-xs md:text-sm font-medium text-white">Attack trend </h1>
+                <div class="mt-3 sm:mt-4 space-y-1.5 sm:space-y-2 text-[9px] sm:text-[10px] md:text-xs text-gray-400 font-mono">
+                    <!-- data will be added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-span-1 md:col-span-2 lg:col-span-4 lg:col-start-1 lg:row-start-4 lg:row-span-3 stat-card bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col fade-in d5 min-h-[180px] lg:min-h-0" style="min-height: 220px;" >
+        <div class="flex gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <div class="w-1.5 h-5 bg-blue-500 rounded-full flex-shrink-0"></div>
+            <div class="w-full">
+                <h1 class="text-[10px] sm:text-xs md:text-sm font-medium text-white">Attack trend </h1>
+                <div class="mt-3 sm:mt-4 space-y-1.5 sm:space-y-2 text-[9px] sm:text-[10px] md:text-xs text-gray-400 font-mono">
+                    <!-- data will be added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-span-1 md:col-span-2 lg:col-span-2 lg:col-start-5 lg:row-start-1 lg:row-span-6 stat-card bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col fade-in d6 min-h-[180px] lg:min-h-0">
+        <div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <div class="w-1.5 h-5 bg-blue-500 rounded-full flex-shrink-0"></div>
+            <h1 class="text-[10px] sm:text-xs md:text-sm font-medium text-white">Attack Trend</h1>
+        </div>
+    </div>
+
+</div>
+
+        </main>
+    </div>
+    
+
+     <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('closed');
+            document.getElementById('overlay').classList.toggle('visible');
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('sidebar');
+                if (!sidebar.classList.contains('closed')) {
+                    sidebar.classList.add('closed');
+                    document.getElementById('overlay').classList.remove('visible');
+                }
+            }
+        });
+    </script>
+    <script src="JS/threat.js"></script>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
+    <title>IntellWall Dashboard</title>
+    <style>
+        body { font-family: 'Michroma', sans-serif; }
+
+        #sidebar {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        #sidebar.closed {
+            transform: translateX(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #overlay {
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        #overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #181B2C; }
+        ::-webkit-scrollbar-thumb { background: #3C69D4; border-radius: 2px; }
+
+        .nav-link {
+            display: block;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #9CA3AF;
+            transition: background 0.2s, color 0.2s;
+            margin-top: 6px;
+            letter-spacing: 0.04em;
+        }
+        .nav-link:hover { background: rgba(60,105,212,0.25); color: #fff; }
+        .nav-link.active { background: #3C69D4; color: #fff; }
+
+        .stat-card {
+            transition: border-color 0.2s, box-shadow 0.2s;
+            border: 1px solid transparent;
+        }
+        .stat-card:hover {
+            border-color: rgba(60,105,212,0.4);
+            box-shadow: 0 0 16px rgba(60,105,212,0.1);
+        }
+
+        .badge-high   { background: rgba(239,68,68,0.15);  color: #F87171; }
+        .badge-medium { background: rgba(234,179,8,0.15);   color: #FCD34D; }
+        .badge-normal { background: rgba(34,197,94,0.15);   color: #4ADE80; }
+
+        .chart-placeholder {
+            width: 100%; height: 100%; min-height: 80px;
+            display: flex; align-items: center; justify-content: center;
+            color: #374151; font-size: 10px; letter-spacing: 0.08em;
+            border: 1px dashed #2D3347; border-radius: 8px;
+        }
+
+        /* ── Fixed sidebar on desktop ── */
+        @media (min-width: 1024px) {
+            #sidebar {
+                position: fixed !important;
+                top: 0; left: 0;
+                height: 100vh;
+                transform: none !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+            }
+            #overlay { display: none !important; }
+            .main-content { margin-left: 220px; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.4s ease both; }
+        .d1{animation-delay:.05s} .d2{animation-delay:.10s} .d3{animation-delay:.15s}
+        .d4{animation-delay:.20s} .d5{animation-delay:.25s} .d6{animation-delay:.30s}
+        .d7{animation-delay:.35s} .d8{animation-delay:.40s} .d9{animation-delay:.45s}
+    </style>
+</head>
+
+<body class="w-full min-h-screen bg-[#181B2C]">
+
+    <div id="overlay" class="fixed inset-0 bg-black/60 z-30 lg:hidden" onclick="toggleSidebar()"></div>
+
+    <aside id="sidebar" class="closed fixed top-0 left-0 z-40 w-[260px] lg:w-[220px] h-full bg-[#181B2C] border-r border-white/5 flex flex-col overflow-y-auto">
+        <div class="flex items-center justify-between px-5 py-5 lg:py-6 border-b border-white/5 flex-shrink-0">
+            <img src="images/intellwall_4.png" alt="IntellWall" class="w-28 xl:w-32 object-contain">
+            <button class="lg:hidden text-gray-400 hover:text-white transition-colors p-1" onclick="toggleSidebar()">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+        <nav class="flex-1 px-3 py-4">
+            <p class="text-[9px] text-gray-600 uppercase tracking-widest px-3 mb-3">Main Menu</p>
+            <a href="Dashboard.html" class="nav-link active"><i class="fa-solid fa-gauge-high mr-2.5 opacity-70"></i>Dashboard</a>
+            <a href="Traffic.html"   class="nav-link"><i class="fa-solid fa-chart-line mr-2.5 opacity-70"></i>Traffic</a>
+            <a href="threats.html"   class="nav-link"><i class="fa-solid fa-triangle-exclamation mr-2.5 opacity-70"></i>Threats</a>
+            <a href="firewall.html"  class="nav-link"><i class="fa-solid fa-shield-halved mr-2.5 opacity-70"></i>Firewall</a>
+            <a href="anomaly.html"   class="nav-link"><i class="fa-solid fa-wave-square mr-2.5 opacity-70"></i>Anomaly</a>
+            <a href="sources.html"   class="nav-link"><i class="fa-solid fa-database mr-2.5 opacity-70"></i>Sources</a>
+            <a href="RL_Agent.html"  class="nav-link"><i class="fa-solid fa-robot mr-2.5 opacity-70"></i>RL Agent</a>
+            <a href="Alerts.html"    class="nav-link"><i class="fa-solid fa-bell mr-2.5 opacity-70"></i>Alerts</a>
+        </nav>
+        <div class="px-4 py-4 border-t border-white/5 hidden lg:flex items-center gap-3 flex-shrink-0">
+            <div class="w-8 h-8 rounded-full bg-[#3C69D4]/30 border border-[#3C69D4]/40 flex items-center justify-center flex-shrink-0">
+                <span class="text-[9px] text-white">KW</span>
+            </div>
+            <div class="min-w-0">
+                <p class="text-white text-[10px] truncate">Kareem Walid</p>
+                <p class="text-gray-500 text-[9px] truncate">Network Admin</p>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-content flex flex-col min-h-screen">
+
+        <header class="sticky top-0 z-20 bg-[#181B2C] border-b border-white/5 flex-shrink-0 px-3 sm:px-5 lg:px-6 h-14 sm:h-16 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                <button class="lg:hidden text-gray-400 hover:text-white transition-colors p-1.5 flex-shrink-0" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+                <div class="relative w-full max-w-xs sm:max-w-sm">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-[10px]"></i>
+                    <input type="search" placeholder="Search threats, IPs, events…"
+                        class="w-full pl-8 pr-4 py-2 bg-[#1F2336] rounded-full text-xs text-white placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-[#3C69D4]/50 border border-transparent focus:border-[#3C69D4]/30">
+                </div>
+            </div>
+            <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                <button class="relative text-gray-400 hover:text-white transition-colors p-1.5">
+                    <i class="fa-regular fa-bell text-sm sm:text-base"></i>
+                    <span class="absolute top-0.5 right-0.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#181B2C]"></span>
+                </button>
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#3C69D4]/30 border border-[#3C69D4]/40 flex items-center justify-center flex-shrink-0">
+                        <span class="text-[9px] sm:text-[10px] text-white">KW</span>
+                    </div>
+                    <div class="hidden md:block">
+                        <p class="text-white text-xs leading-tight">Kareem Walid</p>
+                        <p class="text-gray-500 text-[10px]">Network Admin</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 p-3 sm:p-4 md:p-5 lg:p-6 overflow-y-auto">
+
+            <div class="mb-4 sm:mb-5">
+                <h1 class="text-white text-sm sm:text-base font-semibold tracking-wide">Dashboard</h1>
+                <p class="text-gray-500 text-[10px] sm:text-xs mt-0.5">Real-time network security overview</p>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 mb-3 fade-in d1">
+                <div class="stat-card bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col gap-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-5 bg-green-500 rounded-full flex-shrink-0"></span>
+                        <p class="text-[10px] sm:text-xs text-gray-400">Allowed Traffic</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-gray-500">Total Allowed:</p>
+                        <p class="text-white text-xl sm:text-2xl font-semibold mt-0.5">1,289</p>
+                    </div>
+                </div>
+                <div class="stat-card bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col gap-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-5 bg-red-500 rounded-full flex-shrink-0"></span>
+                        <p class="text-[10px] sm:text-xs text-gray-400">Blocked Traffic</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-gray-500">Total Blocked:</p>
+                        <p class="text-white text-xl sm:text-2xl font-semibold mt-0.5">320</p>
+                    </div>
+                </div>
+                <div class="stat-card bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col gap-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-5 bg-yellow-400 rounded-full flex-shrink-0"></span>
+                        <p class="text-[10px] sm:text-xs text-gray-400">Pending Review</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-gray-500">Total Pending:</p>
+                        <p class="text-white text-xl sm:text-2xl font-semibold mt-0.5">47</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
+                <div class="lg:col-span-2 bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col fade-in d2" style="min-height:280px;">
+                    <div class="flex items-center justify-between mb-3 flex-shrink-0">
+                        <div class="flex items-center gap-2">
+                            <span class="w-1 h-5 bg-blue-500 rounded-full"></span>
+                            <p class="text-xs sm:text-sm font-medium text-white">Alerts</p>
+                            <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                        </div>
+                        <select class="text-[10px] sm:text-xs text-gray-400 bg-[#181B2C] border border-white/5 rounded-lg px-2 py-1.5 focus:outline-none cursor-pointer">
+                            <option>Last 12h</option><option selected>Last 24h</option>
+                            <option>Last 2 days</option><option>Last 4 days</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 overflow-x-auto">
+                        <table class="w-full" style="min-width:420px;">
+                            <thead class="sticky top-0 bg-[#1F2336]">
+                                <tr class="text-gray-500 text-[9px] sm:text-[10px] border-b border-white/5">
+                                    <th class="text-left py-2 px-2 sm:px-3 font-normal">Source IP</th>
+                                    <th class="text-left py-2 px-2 sm:px-3 font-normal">Destination</th>
+                                    <th class="text-left py-2 px-2 sm:px-3 font-normal">Time</th>
+                                    <th class="text-left py-2 px-2 sm:px-3 font-normal">Attack Type</th>
+                                    <th class="text-left py-2 px-2 sm:px-3 font-normal">Severity</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-[10px] sm:text-xs">
+                                <tr class="border-b border-white/5 hover:bg-[#181B2C]"><td class="py-2.5 px-2 sm:px-3 text-gray-300 font-mono">192.168.15.1</td><td class="py-2.5 px-2 sm:px-3 text-gray-300">Server-1</td><td class="py-2.5 px-2 sm:px-3 text-gray-500">12:30</td><td class="py-2.5 px-2 sm:px-3 text-gray-300">DDoS</td><td class="py-2.5 px-2 sm:px-3"><span class="badge-high px-2 py-0.5 rounded-md text-[9px]">High</span></td></tr>
+                                <tr class="border-b border-white/5 hover:bg-[#181B2C]"><td class="py-2.5 px-2 sm:px-3 text-gray-300 font-mono">192.168.10.5</td><td class="py-2.5 px-2 sm:px-3 text-gray-300">Server-5</td><td class="py-2.5 px-2 sm:px-3 text-gray-500">01:30</td><td class="py-2.5 px-2 sm:px-3 text-gray-300">DDoS</td><td class="py-2.5 px-2 sm:px-3"><span class="badge-normal px-2 py-0.5 rounded-md text-[9px]">Normal</span></td></tr>
+                                <tr class="border-b border-white/5 hover:bg-[#181B2C]"><td class="py-2.5 px-2 sm:px-3 text-gray-300 font-mono">10.0.0.15</td><td class="py-2.5 px-2 sm:px-3 text-gray-300">Firewall-2</td><td class="py-2.5 px-2 sm:px-3 text-gray-500">03:15</td><td class="py-2.5 px-2 sm:px-3 text-gray-300">Intrusion</td><td class="py-2.5 px-2 sm:px-3"><span class="badge-medium px-2 py-0.5 rounded-md text-[9px]">Medium</span></td></tr>
+                                <tr class="border-b border-white/5 hover:bg-[#181B2C]"><td class="py-2.5 px-2 sm:px-3 text-gray-300 font-mono">172.16.0.8</td><td class="py-2.5 px-2 sm:px-3 text-gray-300">Server-3</td><td class="py-2.5 px-2 sm:px-3 text-gray-500">05:45</td><td class="py-2.5 px-2 sm:px-3 text-gray-300">Malware</td><td class="py-2.5 px-2 sm:px-3"><span class="badge-high px-2 py-0.5 rounded-md text-[9px]">High</span></td></tr>
+                                <tr class="border-b border-white/5 hover:bg-[#181B2C]"><td class="py-2.5 px-2 sm:px-3 text-gray-300 font-mono">192.168.1.100</td><td class="py-2.5 px-2 sm:px-3 text-gray-300">Server-2</td><td class="py-2.5 px-2 sm:px-3 text-gray-500">07:20</td><td class="py-2.5 px-2 sm:px-3 text-gray-300">Phishing</td><td class="py-2.5 px-2 sm:px-3"><span class="badge-normal px-2 py-0.5 rounded-md text-[9px]">Normal</span></td></tr>
+                                <tr class="hover:bg-[#181B2C]"><td class="py-2.5 px-2 sm:px-3 text-gray-300 font-mono">10.10.5.22</td><td class="py-2.5 px-2 sm:px-3 text-gray-300">Server-4</td><td class="py-2.5 px-2 sm:px-3 text-gray-500">09:10</td><td class="py-2.5 px-2 sm:px-3 text-gray-300">DDoS</td><td class="py-2.5 px-2 sm:px-3"><span class="badge-medium px-2 py-0.5 rounded-md text-[9px]">Medium</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col fade-in d3" style="min-height:200px;">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-1.5 h-5 bg-blue-500 rounded-full"></span>
+                        <p class="text-[10px] sm:text-xs text-gray-400">Traffic Distribution</p>
+                    </div>
+                    <div class="flex-1 chart-placeholder">CHART AREA</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3">
+                <div class="bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col fade-in d4" style="min-height:160px;">
+                    <div class="flex items-center gap-2 mb-3"><span class="w-1.5 h-5 bg-blue-500 rounded-full"></span><p class="text-[10px] sm:text-xs text-gray-400">System Health</p></div>
+                    <div class="flex-1 chart-placeholder">CHART AREA</div>
+                </div>
+                <div class="bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col fade-in d5" style="min-height:160px;">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2"><span class="w-1.5 h-5 bg-blue-500 rounded-full"></span><p class="text-[10px] sm:text-xs text-gray-400">Threat Distribution</p></div>
+                        <button class="text-[10px] text-gray-500 hover:text-[#3C69D4] transition-colors">View All</button>
+                    </div>
+                    <div class="flex-1 chart-placeholder">CHART AREA</div>
+                </div>
+                <div class="bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col fade-in d6 sm:col-span-2 lg:col-span-1" style="min-height:160px;">
+                    <div class="flex items-center gap-2 mb-3"><span class="w-1.5 h-5 bg-blue-500 rounded-full"></span><p class="text-[10px] sm:text-xs text-gray-400">RL Agent Performance</p></div>
+                    <div class="flex-1 chart-placeholder">CHART AREA</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+                <div class="lg:col-span-2 bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col fade-in d7" style="min-height:200px;">
+                    <div class="flex items-center justify-between mb-3 flex-shrink-0">
+                        <div class="flex items-center gap-2"><span class="w-1 h-5 bg-blue-500 rounded-full"></span><p class="text-xs sm:text-sm font-medium text-white">Threat Distribution</p></div>
+                        <select class="text-[10px] sm:text-xs text-gray-400 bg-[#181B2C] border border-white/5 rounded-lg px-2 py-1.5 focus:outline-none cursor-pointer">
+                            <option>Last 12h</option><option selected>Last 24h</option><option>Last 2 days</option><option>Last 4 days</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 chart-placeholder">CHART AREA</div>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <div class="bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col fade-in d8" style="min-height:160px;">
+                        <div class="flex items-center justify-between mb-2 flex-shrink-0">
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-4 bg-blue-500 rounded-full"></span><p class="text-[10px] sm:text-xs text-gray-400">Top 5 IPs — Most Traffic</p></div>
+                            <input type="search" placeholder="Filter" class="w-16 sm:w-20 bg-[#181B2C] border border-white/5 rounded-lg p-1.5 text-[9px] placeholder-gray-600 text-white focus:outline-none focus:ring-1 focus:ring-[#3C69D4]/50">
+                        </div>
+                        <div class="flex justify-between px-2 pb-2 border-b border-white/5 flex-shrink-0">
+                            <p class="text-[9px] sm:text-[10px] text-gray-500">IP Address</p>
+                            <p class="text-[9px] sm:text-[10px] text-gray-500">Risk Score</p>
+                        </div>
+                        <div class="flex-1 chart-placeholder mt-2">DATA AREA</div>
+                    </div>
+                    <div class="bg-[#1F2336] rounded-xl p-3 sm:p-4 flex flex-col fade-in d9" style="min-height:120px;">
+                        <div class="flex items-center gap-2 mb-3"><span class="w-1.5 h-5 bg-blue-500 rounded-full"></span><p class="text-[10px] sm:text-xs text-gray-400">Network Health</p></div>
+                        <div class="flex-1 chart-placeholder">CHART AREA</div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('closed');
+            document.getElementById('overlay').classList.toggle('visible');
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('sidebar');
+                if (!sidebar.classList.contains('closed')) {
+                    sidebar.classList.add('closed');
+                    document.getElementById('overlay').classList.remove('visible');
+                }
+            }
+        });
+    </script>
+    <script src="JS/Dashboard.js"></script>
+</body>
+</html>

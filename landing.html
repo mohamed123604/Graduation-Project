@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.23/dist/lenis.css">
+    <title>IntellWall</title>
+    <style>
+        body{font-family:'Michroma',sans-serif}
+        #mobile-menu{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s ease,opacity .3s ease}
+        #mobile-menu.open{max-height:320px;opacity:1}
+        .scroll-fade{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}
+        .scroll-fade.visible{opacity:1;transform:translateY(0)}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+        .fade-up{animation:fadeUp .8s ease both}
+        #h1-content{background:linear-gradient(90deg,rgb(152,158,191) 0%,hsla(238,54%,49%,1) 88%);-webkit-background-clip:text;background-clip:text;color:transparent}
+        .content-container{transition:opacity .3s ease-in-out,transform .3s ease-in-out}
+        .fade-out{opacity:0;transform:translateY(10px)}
+        .fade-in{opacity:1;transform:translateY(0)}
+        .data-item{transition:all .3s ease-in-out}
+        .list-item{transition:opacity .2s ease-in-out,transform .2s ease-in-out}
+        .tab-item{transition:all .2s ease-in-out}
+        .faq-answer{max-height:0;overflow:hidden;transition:max-height .35s ease,opacity .3s ease,padding .3s ease;opacity:0}
+        .faq-answer.open{max-height:200px;opacity:1;padding-top:.5rem;padding-bottom:.5rem}
+        .faq-icon{transition:transform .3s ease}
+        .faq-icon.rotated{transform:rotate(180deg)}
+        @keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+        #title-content,#title-par,#data-box,#li-container{transition:opacity .3s cubic-bezier(.4,0,.2,1),transform .3s cubic-bezier(.4,0,.2,1)}
+        #data-box>div,#li-container>li{animation:slideIn .3s ease-out backwards}
+        #data-box>div:nth-child(1){animation-delay:.05s}
+        #data-box>div:nth-child(2){animation-delay:.1s}
+        #data-box>div:nth-child(3){animation-delay:.15s}
+        #data-box>div:nth-child(4){animation-delay:.2s}
+        #data-box>div:nth-child(5){animation-delay:.25s}
+        #li-container>li:nth-child(1){animation-delay:.05s}
+        #li-container>li:nth-child(2){animation-delay:.1s}
+        #li-container>li:nth-child(3){animation-delay:.15s}
+        #li-container>li:nth-child(4){animation-delay:.2s}
+    </style>
+</head>
+<body class="w-full fade-up bg-[#0F0F0F]">
+
+    <section class="min-h-screen sm:min-h-screen md:min-h-screen lg:h-screen">
+        <div id="section1">
+            <nav class="relative text-white flex w-[95%] mx-auto p-3 sm:p-4 md:p-5 lg:p-7 items-center justify-between">
+                <img src="intellwall_4.png" alt="IntellWall" class="w-28 sm:w-36 md:w-44 lg:w-48">
+                <ul class="hidden lg:flex text-center gap-5 xl:gap-7 text-sm xl:text-base">
+                    <a href="landing.html"><li class="relative inline-block after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 hover:text-blue-500 duration-300 after:transition-all after:duration-300 hover:after:w-full cursor-pointer">Platform</li></a>
+                    <a href="#Process"><li class="relative inline-block after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 hover:text-blue-500 duration-300 after:transition-all after:duration-300 hover:after:w-full cursor-pointer">Solution</li></a>
+                    <a href="#Pricing"><li class="relative inline-block after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 hover:text-blue-500 duration-300 after:transition-all after:duration-300 hover:after:w-full cursor-pointer">Pricing</li></a>
+                    <a href="#UseCases"><li class="relative inline-block after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 hover:text-blue-500 duration-300 after:transition-all after:duration-300 hover:after:w-full cursor-pointer">Why IntellWall</li></a>
+                    <a href="#Faqs"><li class="relative inline-block after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 hover:text-blue-500 duration-300 after:transition-all after:duration-300 hover:after:w-full cursor-pointer">About IntellWall</li></a>
+                </ul>
+                <div class="hidden lg:flex gap-5 text-lg">
+                    <a href="login.html"><button class="border border-[#181B2C] px-5 xl:px-7 py-2 bg-[#3C69D4] hover:bg-opacity-50 rounded duration-200 hover:border border-[#3C69D4]">Login</button></a>
+                </div>
+                <button  id="menu-btn" class="lg:hidden flex flex-col gap-1.25 cursor-pointer z-50 p-2" aria-label="Toggle menu">
+                    <i id="bar" class="fa-solid fa-bars block w-6 h-1"></i>
+                </button>
+            </nav>
+            <div id="mobile-menu" class="lg:hidden absolute top-[3.5rem] sm:top-[3.8rem] md:top-[4.2rem] left-0 w-full text-white backdrop-blur-md border-t border-white/10 z-40 bg-black bg-opacity-70">
+                <ul class="flex flex-col items-center gap-5 sm:gap-6 py-6 sm:py-8 text-xs sm:text-sm tracking-wider">
+                    <li class="relative inline-block after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 hover:text-blue-500 duration-300 after:transition-all after:duration-300 hover:after:w-full cursor-pointer">Platform</li>
+                    <li class="relative inline-block after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 hover:text-blue-500 duration-300 after:transition-all after:duration-300 hover:after:w-full cursor-pointer">Solution</li>
+                    <li class="relative inline-block after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 hover:text-blue-500 duration-300 after:transition-all after:duration-300 hover:after:w-full cursor-pointer">Pricing</li>
+                    <li class="relative inline-block after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 hover:text-blue-500 duration-300 after:transition-all after:duration-300 hover:after:w-full cursor-pointer">Why IntellWall</li>
+                    <li class="relative inline-block after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-blue-500 hover:text-blue-500 duration-300 after:transition-all after:duration-300 hover:after:w-full cursor-pointer">About IntellWall</li>
+                    <button class="border border-[#181B2C] px-5 xl:px-7 py-2 bg-[#3C69D4] hover:bg-opacity-50 rounded duration-200 hover:border border-[#3C69D4]">Login</button>
+                </ul>
+            </div>
+        </div>
+
+        <div id="content" class="text-white w-[95%] mx-auto p-3 sm:p-4 md:p-5 lg:p-7 mt-10 sm:mt-14 md:mt-16 lg:mt-20">
+            <div>
+                <h1 id="h1-content" class="text-xl sm:text-2xl md:text-3xl lg:text-4xl w-full md:w-[70%] lg:w-[60%]">European Protection for networks, APIs, and applications</h1>
+                <h1 class="pt-4 sm:pt-5 w-full md:w-[70%] lg:w-[60%] text-xs sm:text-sm">protect your digital supply chains, ensure business continuity, and increase your cyber resilience with highly certified, digitally sovereign solutions.</h1>
+                <li class="pt-2 sm:pt-3 pl-6 sm:pl-8 text-[10px] sm:text-xs md:text-sm list-none font-light">1- Developed for critical infrastructures in Europe</li>
+                <li class="pt-2 sm:pt-3 pl-6 sm:pl-8 text-[10px] sm:text-xs md:text-sm list-none font-light">2- Legally compliant with GDPR and made in Egypt</li>
+                <li class="pt-2 sm:pt-3 pl-6 sm:pl-8 text-[10px] sm:text-xs md:text-sm list-none font-light">3- Premium 24/7 support from our dedicated team of IT experts</li>
+            </div>
+            <div class="mt-6 sm:mt-8 md:mt-10 ml-6 sm:ml-8">
+                <button class="block text-white bg-blue-500 px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm hover:bg-transparent hover:border border-blue-500 duration-200 text-xs sm:text-sm">Get Started <span class="pl-2 sm:pl-3"><i class="fa-solid fa-arrow-right"></i></span></button>
+                <button class="mt-3 sm:mt-5 block text-white border border-blue-500 px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm text-xs sm:text-sm">Calculate Your Price</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="Process" class="bg-[#0F0F0F] w-[95%] mx-auto p-3 sm:p-4 md:p-5 lg:p-7 pb-10 sm:pb-12">
+        <h1 class="text-blue-500 text-[10px] sm:text-xs">PROCESS</h1>
+        <p class="text-white mt-2 text-base sm:text-lg md:text-xl font-semibold">Three steps to total file confidence</p>
+        <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mt-10 sm:mt-14 md:mt-20 mx-auto">
+            <div class="border-b sm:border-b md:border-r border-r-0 hover:bg-[#1D1D1D] duration-200 pb-3 md:pb-0">
+                <div class="p-3 sm:p-4 md:p-5">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-500">01</h1>
+                    <div class="flex text-center mt-6 sm:mt-8 md:mt-10 gap-4 sm:gap-5">
+                        <i class="fa-solid fa-upload text-blue-500 text-xl sm:text-2xl md:text-3xl cursor-pointer"></i>
+                        <p class="text-white mt-1 sm:mt-2 text-sm sm:text-base">Upload your file</p>
+                    </div>
+                    <p class="mt-3 sm:mt-4 text-gray-500 text-[10px] sm:text-xs md:text-sm">Drag & drop or upload via API. We support 50+ formats — PDF, EXE, ZIP, Office, scripts, and more.</p>
+                </div>
+            </div>
+            <div class="border-b sm:border-b md:border-r border-r-0 hover:bg-[#1D1D1D] duration-200 pb-3 md:pb-0">
+                <div class="p-3 sm:p-4 md:p-5">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-500">02</h1>
+                    <div class="flex text-center mt-6 sm:mt-8 md:mt-10 gap-4 sm:gap-5">
+                        <i class="fa-solid fa-search text-blue-500 text-xl sm:text-2xl md:text-3xl cursor-pointer"></i>
+                        <p class="text-white mt-1 sm:mt-2 text-sm sm:text-base">Scan & Analyze</p>
+                    </div>
+                    <p class="mt-3 sm:mt-4 text-gray-500 text-[10px] sm:text-xs md:text-sm">Our multi-engine scanner runs deep behavioral analysis, signature matching, and sandbox execution in under 60 seconds.</p>
+                </div>
+            </div>
+            <div class="hover:bg-[#1D1D1D] duration-200 pb-3 md:pb-0">
+                <div class="p-3 sm:p-4 md:p-5">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-500">03</h1>
+                    <div class="flex text-center mt-6 sm:mt-8 md:mt-10 gap-4 sm:gap-5">
+                        <i class="fa-solid fa-file text-blue-500 text-xl sm:text-2xl md:text-3xl cursor-pointer"></i>
+                        <p class="text-white mt-1 sm:mt-2 text-sm sm:text-base">Get Instant Report</p>
+                    </div>
+                    <p class="mt-3 sm:mt-4 text-gray-500 text-[10px] sm:text-xs md:text-sm">Receive a detailed threat report with risk scores, indicators of compromise, and recommended actions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-[#1D1D1D] w-full pb-10 sm:pb-12">
+        <div class="w-[95%] mx-auto p-3 sm:p-4 md:p-5 lg:p-7">
+            <div class="my-6 sm:my-8 md:my-10">
+                <h1 class="text-blue-500 text-[10px] sm:text-xs">Features</h1>
+                <p class="text-white mt-2 text-base sm:text-lg md:text-xl font-semibold">Everything your security team needs</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                <div class="border border-black hover:border-[#3C69D4] p-3 sm:p-4 md:p-5 rounded shadow-lg hover:bg-[#181B2C] duration-200 cursor-pointer">
+                    <div class="bg-[#3C69D4] bg-opacity-20 border border-[2px] border-[#3C69D4] rounded w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center">
+                        <i class="fa-regular fa-clock text-[#3C69D4] text-lg sm:text-xl md:text-2xl lg:text-3xl"></i>
+                    </div>
+                    <div class="text-white my-3 sm:my-4 md:my-5">
+                        <h1 class="my-2 sm:my-3 text-xs sm:text-sm md:text-base">Real-Time Scanning</h1>
+                        <p class="text-[10px] sm:text-xs md:text-sm text-gray-400">Results in under 60 seconds. No queues, no waiting — instant feedback on every file you upload.</p>
+                    </div>
+                </div>
+                <div class="border border-black p-3 sm:p-4 md:p-5 rounded shadow-lg hover:bg-[#181B2C] hover:border-[#3C69D4] duration-200 cursor-pointer">
+                    <div class="bg-[#3C69D4] bg-opacity-20 border border-[2px] border-[#3C69D4] rounded w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center">
+                        <i class="fa-solid fa-desktop text-[#3C69D4] text-lg sm:text-xl md:text-2xl lg:text-3xl"></i>
+                    </div>
+                    <div class="text-white my-3 sm:my-4 md:my-5">
+                        <h1 class="my-2 sm:my-3 text-xs sm:text-sm md:text-base">50+ File Formats</h1>
+                        <p class="text-[10px] sm:text-xs md:text-sm text-gray-400">PDF, DOC, EXE, ZIP, JAR, scripts, images, and more. If your users send it, we scan it.</p>
+                    </div>
+                </div>
+                <div class="border border-black p-3 sm:p-4 md:p-5 rounded shadow-lg hover:bg-[#181B2C] hover:border-[#3C69D4] duration-200 cursor-pointer">
+                    <div class="bg-[#3C69D4] bg-opacity-20 border border-[2px] border-[#3C69D4] rounded w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center">
+                        <i class="fa-solid fa-code text-[#3C69D4] text-lg sm:text-xl md:text-2xl lg:text-3xl"></i>
+                    </div>
+                    <div class="text-white my-3 sm:my-4 md:my-5">
+                        <h1 class="my-2 sm:my-3 text-xs sm:text-sm md:text-base">REST API First</h1>
+                        <p class="text-[10px] sm:text-xs md:text-sm text-gray-400">Integrate in minutes with our clean REST API. SDKs for Python, Node, Java, and Go included.</p>
+                    </div>
+                </div>
+                <div class="border border-black p-3 sm:p-4 md:p-5 rounded shadow-lg hover:bg-[#181B2C] hover:border-[#3C69D4] duration-200 cursor-pointer">
+                    <div class="bg-[#3C69D4] bg-opacity-20 border border-[2px] border-[#3C69D4] rounded w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center">
+                        <i class="fa-solid fa-shield text-[#3C69D4] text-lg sm:text-xl md:text-2xl lg:text-3xl"></i>
+                    </div>
+                    <div class="text-white my-3 sm:my-4 md:my-5">
+                        <h1 class="my-2 sm:my-3 text-xs sm:text-sm md:text-base">Multi-Engine Analysis</h1>
+                        <p class="text-[10px] sm:text-xs md:text-sm text-gray-400">We combine 15+ AV engines with sandboxing and ML-based behavioral detection for 99.9% accuracy.</p>
+                    </div>
+                </div>
+                <div class="border border-black p-3 sm:p-4 md:p-5 rounded shadow-lg hover:bg-[#181B2C] hover:border-[#3C69D4] duration-200 cursor-pointer">
+                    <div class="bg-[#3C69D4] bg-opacity-20 border border-[2px] border-[#3C69D4] rounded w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center">
+                        <i class="fa-solid fa-check-double text-[#3C69D4] text-lg sm:text-xl md:text-2xl lg:text-3xl"></i>
+                    </div>
+                    <div class="text-white my-3 sm:my-4 md:my-5">
+                        <h1 class="my-2 sm:my-3 text-xs sm:text-sm md:text-base">Compliance Ready</h1>
+                        <p class="text-[10px] sm:text-xs md:text-sm text-gray-400">SOC 2 Type II, ISO 27001, GDPR compliant. Audit logs and data residency controls included.</p>
+                    </div>
+                </div>
+                <div class="border border-black p-3 sm:p-4 md:p-5 rounded shadow-lg hover:bg-[#181B2C] hover:border-[#3C69D4] duration-200 cursor-pointer">
+                    <div class="bg-[#3C69D4] bg-opacity-20 border border-[2px] border-[#3C69D4] rounded w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center">
+                        <i class="fa-solid fa-chart-simple text-[#3C69D4] text-lg sm:text-xl md:text-2xl lg:text-3xl"></i>
+                    </div>
+                    <div class="text-white my-3 sm:my-4 md:my-5">
+                        <h1 class="my-2 sm:my-3 text-xs sm:text-sm md:text-base">Threat Intelligence</h1>
+                        <p class="text-[10px] sm:text-xs md:text-sm text-gray-400">Real-time IOC feeds, CVE correlation, and threat actor attribution in every detailed report.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="UseCases" class="bg-[#0F0F0F] w-[95%] mx-auto p-3 sm:p-4 md:p-5 lg:p-7 pb-10 sm:pb-12">
+        <div class="my-8 sm:my-12 md:my-20">
+            <h1 class="text-blue-500 text-[10px] sm:text-xs">Use Cases</h1>
+            <p class="text-white mt-2 text-base sm:text-lg md:text-xl font-semibold">Built for every team that cares about security</p>
+        </div>
+        <div class="overflow-x-auto pb-2">
+            <ul id="li-titles" class="flex text-center items-center justify-start sm:justify-center gap-2 sm:gap-3 md:gap-6 lg:gap-16 list-none text-white min-w-max sm:min-w-0">
+                <li id="it-title" class="tab-item px-3 sm:px-4 md:px-5 lg:px-6 py-2 sm:py-2.5 md:py-3 rounded border border-[#3C69D4] cursor-pointer bg-[#3C69D4] bg-opacity-20 text-[10px] sm:text-xs md:text-sm">IT Team</li>
+                <li id="saas-title" class="tab-item px-3 sm:px-4 md:px-5 lg:px-6 py-2 sm:py-2.5 md:py-3 rounded border cursor-pointer hover:bg-[#3C69D4] hover:bg-opacity-20 border-[#3C69D4] duration-200 bg-black bg-opacity-20 text-[10px] sm:text-xs md:text-sm">SAAS Companies</li>
+                <li id="finance-title" class="tab-item px-3 sm:px-4 md:px-5 lg:px-6 py-2 sm:py-2.5 md:py-3 rounded border cursor-pointer hover:bg-[#3C69D4] hover:bg-opacity-20 border-[#3C69D4] duration-200 bg-black bg-opacity-20 text-[10px] sm:text-xs md:text-sm">Finance & Banking</li>
+                <li id="health-title" class="tab-item px-3 sm:px-4 md:px-5 lg:px-6 py-2 sm:py-2.5 md:py-3 rounded border cursor-pointer hover:bg-[#3C69D4] hover:bg-opacity-20 border-[#3C69D4] duration-200 bg-black bg-opacity-20 text-[10px] sm:text-xs md:text-sm">Healthcare</li>
+            </ul>
+        </div>
+        <div class="flex flex-col lg:flex-row justify-between p-3 sm:p-5 md:p-7 mt-6 sm:mt-8 md:mt-10 gap-6 lg:gap-0">
+            <div class="text-white w-full lg:w-[55%]">
+                <h1 id="title-content" class="text-lg sm:text-xl md:text-2xl lg:text-3xl">Zero-trust file intake for IT operations</h1>
+                <p id="title-par" class="mt-3 sm:mt-4 md:mt-5 text-gray-500 text-[10px] sm:text-xs md:text-sm">Automatically scan every file entering your network perimeter. Block threats before they reach internal systems with policy-based automation.</p>
+                <div id="li-container" class="ml-4 sm:ml-6 md:ml-10 mt-3">
+                    <li id="li-content" class="text-[10px] sm:text-xs md:text-sm text-gray-400 mt-1.5 sm:mt-2">Automated quarantine on threat detection</li>
+                    <li id="li-content" class="text-[10px] sm:text-xs md:text-sm text-gray-400 mt-1.5 sm:mt-2">Active Directory & SIEM integration</li>
+                    <li id="li-content" class="text-[10px] sm:text-xs md:text-sm text-gray-400 mt-1.5 sm:mt-2">Custom scan policies per department</li>
+                    <li id="li-content" class="text-[10px] sm:text-xs md:text-sm text-gray-400 mt-1.5 sm:mt-2">Real-time Slack & email alerts</li>
+                </div>
+            </div>
+            <div class="w-full lg:w-[40%] border flex items-center justify-center bg-[#494949] bg-opacity-30">
+                <div id="data-box" class="w-full text-white py-2 sm:py-3 rounded items-center">
+                    <div id="line1" class="flex justify-between text-center p-2 sm:p-3 text-[10px] sm:text-xs md:text-sm">
+                        <h1 class="text-gray-400">File</h1>
+                        <p>installer_patch.exe</p>
+                    </div>
+                    <hr class="w-[95%] mx-auto bg-gray-300">
+                    <div id="line2" class="flex justify-between text-center p-2 sm:p-3 text-[10px] sm:text-xs md:text-sm">
+                        <h1 class="text-gray-400">Risk Score</h1>
+                        <p class="text-yellow-500">72 / High</p>
+                    </div>
+                    <hr class="w-[95%] mx-auto bg-gray-300">
+                    <div id="line3" class="flex justify-between text-center p-2 sm:p-3 text-[10px] sm:text-xs md:text-sm">
+                        <h1 class="text-gray-400">Verdict</h1>
+                        <p class="text-yellow-500">Suspicious</p>
+                    </div>
+                    <hr class="w-[95%] mx-auto bg-gray-300">
+                    <div id="line4" class="flex justify-between text-center p-2 sm:p-3 text-[10px] sm:text-xs md:text-sm">
+                        <h1 class="text-gray-400">Action Taken</h1>
+                        <p class="text-green-500">Quarantined</p>
+                    </div>
+                    <hr class="w-[95%] mx-auto bg-gray-300">
+                    <div id="line5" class="flex justify-between text-center p-2 sm:p-3 text-[10px] sm:text-xs md:text-sm">
+                        <h1 class="text-gray-400">Alert Sent</h1>
+                        <p class="text-green-500"> ✓ Slack #sec-alerts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-[#1D1D1D] w-full pb-10 sm:pb-12">
+        <div class="w-[95%] mx-auto p-3 sm:p-4 md:p-5 lg:p-7">
+            <div class="my-6 sm:my-8 md:my-10">
+                <h1 class="text-blue-500 text-[10px] sm:text-xs">Testimonials</h1>
+                <p class="text-white mt-2 text-base sm:text-lg md:text-xl font-semibold">What security teams are saying</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 my-8 sm:my-12 md:my-20">
+                <div class="border border-[#2F2F2F] bg-opacity-50 rounded p-4 sm:p-5 md:p-7 bg-[#2F2F2F] cursor-pointer hover:bg-[#3C69D4] hover:bg-opacity-20 duration-200 shadow-lg">
+                    <div>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                    </div>
+                    <div class="text-[10px] sm:text-xs md:text-sm text-gray-400 mt-4 sm:mt-5">
+                        <p>"We integrated ShieldScan in a weekend. Now every file that enters our platform is checked automatically — our security team sleeps better."</p>
+                    </div>
+                    <div class="flex gap-4 sm:gap-5 items-center mt-5 sm:mt-6 md:mt-8">
+                        <div class="bg-[#3C69D4] bg-opacity-20 border border-[#3C69D4] p-2 sm:p-3 rounded-full text-white text-xs sm:text-sm">MO</div>
+                        <div>
+                            <p class="text-white text-xs sm:text-sm">Mohammed Osman</p>
+                            <p class="text-gray-400 text-[10px] sm:text-xs">IT Director · CoreHealth</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="border border-[#2F2F2F] bg-opacity-50 rounded p-4 sm:p-5 md:p-7 bg-[#2F2F2F] cursor-pointer hover:bg-[#3C69D4] hover:bg-opacity-20 duration-200 shadow-lg">
+                    <div>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                    </div>
+                    <div class="text-[10px] sm:text-xs md:text-sm text-gray-400 mt-4 sm:mt-5">
+                        <p>"The API is incredibly clean and the detection rate is impressive. We stopped two ransomware attempts in the first month alone."</p>
+                    </div>
+                    <div class="flex gap-4 sm:gap-5 items-center mt-5 sm:mt-6 md:mt-8">
+                        <div class="bg-[#3C69D4] bg-opacity-20 border border-[#3C69D4] p-2 sm:p-3 rounded-full text-white text-xs sm:text-sm">SR</div>
+                        <div>
+                            <p class="text-white text-xs sm:text-sm">Sara Rosenfeld</p>
+                            <p class="text-gray-400 text-[10px] sm:text-xs">Head of Security · Meridian Bank</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="border border-[#2F2F2F] bg-opacity-50 rounded p-4 sm:p-5 md:p-7 bg-[#2F2F2F] cursor-pointer hover:bg-[#3C69D4] hover:bg-opacity-20 duration-200 shadow-lg sm:col-span-2 lg:col-span-1">
+                    <div>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                        <i class="fa-solid fa-star text-[#3C69D4]"></i>
+                    </div>
+                    <div class="text-[10px] sm:text-xs md:text-sm text-gray-400 mt-4 sm:mt-5">
+                        <p>"HIPAA compliance was our biggest concern. ShieldScan handled everything — zero data retention, BAA signed, done. Exactly what we needed."</p>
+                    </div>
+                    <div class="flex gap-4 sm:gap-5 items-center mt-5 sm:mt-6 md:mt-8">
+                        <div class="bg-[#3C69D4] bg-opacity-20 border border-[#3C69D4] p-2 sm:p-3 rounded-full text-white text-xs sm:text-sm">AK</div>
+                        <div>
+                            <p class="text-white text-xs sm:text-sm">Ahmed Khalil</p>
+                            <p class="text-gray-400 text-[10px] sm:text-xs">CTO · DataVault</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="Pricing" class="bg-[#0F0F0F] w-[95%] mx-auto p-3 sm:p-4 md:p-5 lg:p-7 pb-10 sm:pb-12">
+        <div class="flex text-white my-8 sm:my-10 md:my-12 text-center justify-center">
+            <div>
+                <h1 class="text-[#3C69D4] my-2 sm:my-3 text-sm sm:text-base">Pricing</h1>
+                <h1 class="text-lg sm:text-xl md:text-2xl font-semibold my-2 sm:my-3">Simple, transparent pricing</h1>
+                <h1 class="text-gray-400 text-[10px] sm:text-xs md:text-sm">Start free. Scale as you grow. No hidden fees, no surprise bills.</h1>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
+            <div class="border border-gray-400 rounded p-4 sm:p-5 md:p-7">
+                <div>
+                    <h1 class="text-gray-400 text-xs sm:text-sm">Starter</h1>
+                    <div class="flex py-1 sm:py-2">
+                        <span class="text-white text-[10px] sm:text-xs">$</span>
+                        <h1 class="text-white text-2xl sm:text-3xl md:text-4xl">49</h1>
+                    </div>
+                    <h1 class="text-gray-400 text-[10px] sm:text-xs">per month</h1>
+                </div>
+                <hr class="w-[95%] mx-auto bg-gray-300 my-3 sm:my-4">
+                <ul class="px-2 sm:px-3 md:px-4 py-2 text-gray-400">
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span> 1,000 scans / month</li>
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span> 20 file formats</li>
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span> Basic threat reports</li>
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span> REST API access</li>
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span> Email support</li>
+                </ul>
+                <div class="flex mx-auto my-3 sm:my-4 md:my-5">
+                    <button class="border w-[90%] mx-auto text-white py-2 sm:py-2.5 md:py-3 text-center rounded hover:bg-[#3C69D4] hover:bg-opacity-20 duration-200 hover:border-[#3C69D4] text-[10px] sm:text-xs md:text-sm">Get Started</button>
+                </div>
+            </div>
+            <div class="border border-gray-400 rounded p-4 sm:p-5 md:p-7">
+                <div>
+                    <h1 class="text-gray-400 text-xs sm:text-sm">Business</h1>
+                    <div class="flex py-1 sm:py-2">
+                        <span class="text-white text-[10px] sm:text-xs">$</span>
+                        <h1 class="text-white text-2xl sm:text-3xl md:text-4xl">199</h1>
+                    </div>
+                    <h1 class="text-gray-400 text-[10px] sm:text-xs">per month</h1>
+                </div>
+                <hr class="w-[95%] mx-auto bg-gray-300 my-3 sm:my-4">
+                <ul class="px-2 sm:px-3 md:px-4 py-2 text-gray-400">
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span>10,000 scans / month</li>
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span>50+ file formats</li>
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span>Detailed threat reports</li>
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span>Webhooks & Integrations</li>
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span>Audit logs</li>
+                </ul>
+                <div class="flex mx-auto my-3 sm:my-4 md:my-5">
+                    <button class="border w-[90%] mx-auto text-white py-2 sm:py-2.5 md:py-3 text-center rounded bg-[#3C69D4] bg-opacity-20 duration-200 border-[#3C69D4] text-[10px] sm:text-xs md:text-sm">Get Started</button>
+                </div>
+            </div>
+            <div class="border border-gray-400 rounded p-4 sm:p-5 md:p-7 sm:col-span-2 lg:col-span-1">
+                <div>
+                    <h1 class="text-gray-400 text-xs sm:text-sm">Enterprise</h1>
+                    <div class="py-1 sm:py-2">
+                        <h1 class="text-white text-2xl sm:text-3xl md:text-4xl">Custom</h1>
+                    </div>
+                    <h1 class="text-gray-400 text-[10px] sm:text-xs">contact us</h1>
+                </div>
+                <hr class="w-[95%] mx-auto bg-gray-300 my-3 sm:my-4">
+                <ul class="px-2 sm:px-3 md:px-4 py-2 text-gray-400">
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span>Unlimited scans</li>
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span>On-premise option</li>
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span>Custom data residency</li>
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span>SLA 99.99% uptime</li>
+                    <li class="mt-3 sm:mt-4 md:mt-6 text-[10px] sm:text-xs md:text-sm"><span class="text-[#3C69D4] pr-2">✓</span>Dedicated CSM</li>
+                </ul>
+                <div class="flex mx-auto my-3 sm:my-4 md:my-5">
+                    <button class="border w-[90%] mx-auto text-white py-2 sm:py-2.5 md:py-3 text-center rounded hover:bg-[#3C69D4] hover:bg-opacity-20 duration-200 hover:border-[#3C69D4] text-[10px] sm:text-xs md:text-sm">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="Faqs" class="bg-[#0F0F0F] w-[95%] mx-auto p-3 sm:p-4 md:p-5 lg:p-7 pb-10 sm:pb-12">
+        <div class="my-8 sm:my-12 md:my-20">
+            <div class="text-white text-center">
+                <h1 class="text-[#3C69D4] my-2 sm:my-3 text-sm sm:text-base">FAQ</h1>
+                <h1 class="text-lg sm:text-xl md:text-2xl font-semibold">Common questions</h1>
+            </div>
+            <hr class="w-[50%] sm:w-[60%] md:w-[70%] mx-auto bg-gray-300 mt-8 sm:mt-10 md:mt-12 my-3 sm:my-4">
+            <div id="faq-container" class="mt-8 sm:mt-10 md:mt-12 w-[95%] sm:w-[90%] md:w-[70%] mx-auto"></div>
+        </div>
+    </section>
+
+    <footer class="bg-[#0F0F0F] w-full py-8 sm:py-10 md:py-14">
+        <hr class="border-gray-800">
+        <div class="flex flex-col items-center gap-5 sm:gap-6 md:gap-8 lg:flex-row lg:justify-between lg:items-center w-[90%] mx-auto text-white mt-8 sm:mt-10">
+            <div class="flex justify-center md:justify-start">
+                <img src="intellwall_4.png" alt="intellwall" class="w-36 sm:w-40 md:w-48 lg:w-64">
+            </div>
+            <div class="text-center text-[10px] sm:text-xs md:text-sm text-gray-400">
+                <h1>© 2025 IntelWall. All rights reserved.</h1>
+            </div>
+            <div class="flex flex-wrap justify-center gap-4 sm:gap-5 md:gap-6 text-center text-xs sm:text-sm">
+                <p class="hover:text-[#3C69D4] duration-200 cursor-pointer">Privacy</p>
+                <p class="hover:text-[#3C69D4] duration-200 cursor-pointer">Terms</p>
+                <p class="hover:text-[#3C69D4] duration-200 cursor-pointer">Docs</p>
+                <p class="hover:text-[#3C69D4] duration-200 cursor-pointer">Status</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="JS/gsap.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
+    <script>new Lenis({autoRaf:true,autoToggle:true,anchors:true,allowNestedScroll:true,naiveDimensions:true,stopInertiaOnNavigate:true})</script>
+    <script src="JS/landing.js"></script>
+</body>
+</html>
